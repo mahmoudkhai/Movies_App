@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">أفلام أجنبى</string>
+
+    <string name="top_rated">الأعلى تقييم</string>
+    <string name="popular">الأكثر شهرة</string>
+    <string name="favourite">المفضل</string>
+</resources>
