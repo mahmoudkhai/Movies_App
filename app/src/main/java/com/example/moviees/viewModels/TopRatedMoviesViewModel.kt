@@ -2,6 +2,7 @@ package com.example.moviees.viewModels
 
 import androidx.lifecycle.*
 import com.example.moviees.model.topRated.Result
+import com.example.moviees.model.topRated.TopRatedMoviesResponse
 import com.example.moviees.repository.LatestMovieRepository
 import com.example.moviees.util.NetworkResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,7 @@ class TopRatedMoviesViewModel @Inject constructor(
      private val repo: LatestMovieRepository,
 ) : ViewModel()  {
 
-    lateinit var  result: LiveData<NetworkResponse<List<Result?>>>
+    lateinit var  result: LiveData<NetworkResponse<TopRatedMoviesResponse?>>
     init {
     result = repo.getTopRatedMovies().asLiveData()
     }

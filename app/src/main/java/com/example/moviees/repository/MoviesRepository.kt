@@ -21,21 +21,19 @@ class MoviesRepository
     private val api: MovieApi
 ) :
     LatestMovieRepository {
-
-
     private val dao = database.daoInstance()
 
-    override fun getTopRatedMovies(): Flow<NetworkResponse<List<Result>>> =
-        networdBoundResourse<List<Result>, List<Result>?>(
-            query = {
-                dao.getCachedMovies()
-            }, fetch = {
-                api.getTopRated().body()?.results
-            }, saveFetchResult = {
-                dao.deleteAllCachedMovies()
-                dao.cacheMovies(it)
-            }
-        )
+//    override fun getTopRatedMovies(): Flow<NetworkResponse<TopRatedMoviesResponse?>> =
+//        networdBoundResourse<List<Result>, List<Result>?>(
+//            query = {
+//                dao.getCachedMovies()
+//            }, fetch = {
+//                api.getTopRated().body()?.results
+//            }, saveFetchResult = {
+//                dao.deleteAllCachedMovies()
+//                dao.cacheMovies(it)
+//            }
+//        )
 
     fun <T> wrapWithFlow(function: suspend () -> Response<T>): Flow<NetworkResponse<T?>> {
         return flow {
@@ -56,6 +54,10 @@ class MoviesRepository
                 emit(NetworkResponse.Error(false , errorMessage = "Something went Wrong"))
             }
         }
+    }
+
+    override fun getTopRatedMovies(): Flow<NetworkResponse<TopRatedMoviesResponse?>> {
+        return wrapWithFlow { api.getTopRated() }
     }
 
 //    fun test(): Flow<NetworkResponse<TopRatedMoviesResponse?>> {
