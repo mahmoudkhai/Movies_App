@@ -17,7 +17,7 @@ class MovieItemAdapter constructor(private var oldResponseList: List<Result?>, v
     override val layoutId: Int = R.layout.item_for_movie
 
     override fun setNewData(newResponseList: List<Result?>) {
-        val diffUtil = MyDiffUtil(newResponseList, oldResponseList)
+        val diffUtil = MyDiffUtil(newResponseList , oldResponseList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         oldResponseList = newResponseList
         diffResults.dispatchUpdatesTo(this)

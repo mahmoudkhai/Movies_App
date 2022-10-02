@@ -20,10 +20,13 @@ fun sourceTest (strings :Source<String>) {
 }
 
 // in is a like of super keyword , out is a like extends
+// like java , kotlin has type erasure , which means that , at runtime you can't query types
+// star projection <*> ,, doesn't care about what is inside this <> , put just let me know if it is this type or not
 
+//default T is upper bound to Any? -- so you must treat is as nullable.
 sealed class NetworkResponse<out T > {
 
-    data class Success<T> ( val data :T) : NetworkResponse<T>()
+    data class Success<T> ( val data :T?) : NetworkResponse<T>()
 
     data class Error (val isNetworkError: Boolean,
                          val errorCode: Int? = null,

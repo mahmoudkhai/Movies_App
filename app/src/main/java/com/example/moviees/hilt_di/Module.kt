@@ -25,16 +25,17 @@ object Module {
 //    @Singleton
 //    @Provides
     fun getApiInstance(): MovieApi {
-        val okHttpClient = OkHttpClient().newBuilder() //This builds a client that shares the same connection pool, thread pools, and configuration.
-            .readTimeout(4000 , TimeUnit.MICROSECONDS)
-            .writeTimeout(4000 , TimeUnit.MICROSECONDS)
-            .addNetworkInterceptor(ChachInterceptor()) // Network Interceptor
-            .addInterceptor(ForceCacheInterceptor()) // Application Interceptor
-            .build()
+//        val okHttpClient = OkHttpClient().newBuilder() //This builds a client that shares the same connection pool, thread pools, and configuration.
+//            .readTimeout(4000 , TimeUnit.MICROSECONDS)
+//            .writeTimeout(4000 , TimeUnit.MICROSECONDS)
+//            .addNetworkInterceptor(ChachInterceptor()) // Network Interceptor
+//            .addInterceptor(ForceCacheInterceptor()) // Application Interceptor
+//            .build()
 
-        return Retrofit.Builder().baseUrl(Constants.BASE_URL)
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
+//            .client(okHttpClient)
             .build()
             .create(MovieApi::class.java)
     }

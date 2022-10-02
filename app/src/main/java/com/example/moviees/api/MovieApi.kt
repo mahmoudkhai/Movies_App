@@ -12,39 +12,44 @@ interface MovieApi {
 
     @GET("/movie/latest")
     suspend fun getLatestMovie(
-        @Query("api_key") apiKey:String
+        @Query("api_key") apiKey: String
     ): Response<LatestMoviesResponse?>
 
     @GET("/movie/{movie_id}")
     suspend fun movieDetailsRequest(
         @Query("api_key") apiKey: String = Constants.API_KEY,
         @Path("movie_id") movieId: Int,
-    ):Response<MovieDetailsResponse>
+    ): Response<MovieDetailsResponse?>
 
     @GET("/movie/{movie_id}/similar")
-    suspend fun similarMovies(@Path("movie_id") movieId: Int , @Query("api_key") apiKey: String = Constants.API_KEY,)
+    suspend fun similarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = Constants.API_KEY,
+    )
 
     @FormUrlEncoded
     @POST("movie/{movie_id}/rating")
     suspend fun rateMovie(
-        @Path ("movie_id") movieId: Int,
+        @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = Constants.API_KEY,
-        @Query ("guest_session_id") gustSessionId :String?,
-        @Query("session_id") sessionId :String?,
+        @Query("guest_session_id") gustSessionId: String?,
+        @Query("session_id") sessionId: String?,
         @Field("value") stars: Int,
 
-    )
+        )
 
     @GET("movie/top_rated")
     suspend fun getTopRated(
         @Query("api_key") apiKey: String = Constants.API_KEY,
-//        @Query("page") pageNumber:Int
-    ):Response<TopRatedMoviesResponse?>
+//      @Query("page") pageNumber:Int
+    ):  Response<TopRatedMoviesResponse?>
 
     @GET("movie/popular")
-    suspend fun popularMoviesRequest (@Query ("api_key") apiKey: String = Constants.API_KEY,)
+    suspend fun popularMoviesRequest(@Query("api_key") apiKey: String = Constants.API_KEY)
 
-    @GET ("movie/{movie_id}/images")
-    suspend fun movieImages (@Path ("movie_id") movieId: Int ,
-                             @Query("api_key") apiKey: String = Constants.API_KEY,):Response<MovieImagesResponse>
+    @GET("movie/{movie_id}/images")
+    suspend fun movieImages(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = Constants.API_KEY,
+    ): Response<MovieImagesResponse>
 }

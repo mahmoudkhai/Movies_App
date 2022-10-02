@@ -1,12 +1,16 @@
 package com.example.moviees.repository
 
+import android.util.Log
+import android.widget.Toast
 import com.example.moviees.database.MoviesDatabase
 import com.example.moviees.model.topRated.Result
 import com.example.moviees.api.MovieApi
+import com.example.moviees.model.movieDetails.MovieDetailsResponse
 import com.example.moviees.model.topRated.TopRatedMoviesResponse
 import com.example.moviees.util.Constants
 import com.example.moviees.util.NetworkResponse
 import com.example.moviees.util.networdBoundResourse
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -35,29 +39,44 @@ class MoviesRepository
 //            }
 //        )
 
-    fun <T> wrapWithFlow(function: suspend () -> Response<T>): Flow<NetworkResponse<T?>> {
+    private fun <T> wrapWithFlow(function: suspend (apiKey: String) -> Response<T?>): Flow<NetworkResponse<T?>> {
         return flow {
             emit(NetworkResponse.Loading())
+            delay(1000)
             try {
-                val response = function()
-                if (response.isSuccessful) emit(NetworkResponse.Success(response.body()))
-                else emit(NetworkResponse.Error(isNetworkError = false , errorBody = response.errorBody()))
+                println( "now trying to fetch data")
+                val response = function(Constants.API_KEY)
+                if (response.isSuccessful) {
+                    println("data fetched successfully")
+                    emit(NetworkResponse.Success(response.body()))
+                    println("data emitted successfully")
+                }else {
+                    println("error happened")
+                    emit(NetworkResponse.Error(isNetworkError = false , errorBody = response.errorBody()))
+                    println("error emmitted")
+                }
             } catch (throwable : Throwable) {
-               when(throwable){
+                println("i catch throwable")
+                when(throwable){
                    is HttpException -> emit(NetworkResponse.Error(isNetworkError = false , throwable.code() , throwable.response()?.errorBody()))
 
                    is UnknownHostException -> emit(NetworkResponse.Error(isNetworkError = false , errorMessage = throwable.message))
 
-                   else -> emit(NetworkResponse.Error (isNetworkError = false , errorMessage = "Something went wrong"))
+                   else -> emit(NetworkResponse.Error (isNetworkError = false , errorMessage = "error"))
                }
-            }finally {
-                emit(NetworkResponse.Error(false , errorMessage = "Something went Wrong"))
             }
+//            finally {
+//                emit(NetworkResponse.Error(false , errorMessage = "Something Wrong"))
+//            }
         }
     }
 
     override fun getTopRatedMovies(): Flow<NetworkResponse<TopRatedMoviesResponse?>> {
-        return wrapWithFlow { api.getTopRated() }
+        return wrapWithFlow { api.getTopRated(Constants.API_KEY) }
+    }
+
+    override fun fetchMovieDetails(movieId: Int): Flow<NetworkResponse<MovieDetailsResponse?>> {
+        return wrapWithFlow { api.movieDetailsRequest(movieId = movieId , apiKey = Constants.API_KEY) }
     }
 
 //    fun test(): Flow<NetworkResponse<TopRatedMoviesResponse?>> {
